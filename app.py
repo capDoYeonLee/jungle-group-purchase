@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify, request
 import requests
 from pymongo import MongoClient
+from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -23,10 +25,11 @@ def getCreateProduct():
 
 @app.route('/api/products', methods=['GET'])
 def getAllProducts():
-    result = list(db.boards.find({}, {'_id': 0}))
+    result = list(db.boards.find({}))
     
     formatted_products = [
-        {
+        {   
+            "id": str(product["_id"]),
             "title": product["name"],  # 'name' 필드를 'title'로 변경
             "price": f"{product['price']}원",  # 가격에 "원" 추가
             "deadline": product["deadline"],  # 날짜 형식 그대로 사용
@@ -60,6 +63,10 @@ def createProduct():
     
     db.boards.insert_one(product)
     return jsonify({'result': 'success'})
+
+
+
+#def scheduleComingDeadlineProducts():
 
 
 
