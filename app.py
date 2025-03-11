@@ -33,4 +33,36 @@ def getAllProducts():
             "category": product["category"],
             "shipping": product["shipping"]
         }
-        for pro
+        for product in result
+    ]
+
+    return jsonify({'result':'success', 'products': formatted_products})
+
+
+
+
+@app.route('/api/product', methods=['POST'])
+def createProduct():
+    board = request.form['title']
+    name = request.form['item_name']
+    link = request.form['item_url']
+    price = request.form['item_price']
+    deadline = request.form['deadline']
+    shipping = request.form['delivery_fee']
+    condition = request.form['free_delivery_cond']
+    message = request.form['confirmation_msg']
+    category = request.form['category']
+    quantity = request.form['item_count']
+
+    product = { 'board': board, 'name':name, 'link':link, 'price':price, 
+                'deadline':deadline, 'shipping':shipping, 'condition':condition, 
+                'message':message, 'category':category, 'quantity':quantity }
+    
+    db.boards.insert_one(product)
+    return jsonify({'result': 'success'})
+
+
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', port=5001, debug=True)
+
