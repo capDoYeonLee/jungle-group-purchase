@@ -203,6 +203,62 @@
         display: flex;
         justify-content: flex-end;
     }
+
+    .quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* 입력창과 버튼 사이 여백 */
+}
+
+.quantity-input {
+    width: 60px;
+    height: 40px;
+    font-size: 16px;
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    padding: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.quantity-input:focus {
+    border-color: #ff3860; /* Bulma danger 색상 */
+}
+
+.buy {
+    background-color: #ff3860;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.buy:hover {
+    background-color: #e02d56;
+    transform: scale(1.05);
+}
+
+.buy:active {
+    background-color: #c5284b;
+    transform: scale(0.95);
+}
+
+.box{
+    text-align: center;
+}
     </style>
 </head>
 <body>
@@ -226,8 +282,12 @@
             <div class="modal-background"></div>
             <div class="modal-content">
                 <div class="box">
-                    <h1 class="title">모달 내용</h1>
-                    <p>여기서 필요한 내용을 보여주세요.</p>
+                    <div>
+                        <h1 class="title">공구 탑승!!!</h1> 
+                        <p>구매할 개수를 선택해주세요!</p> 
+                    </div>
+                    <br>
+                    <input type="number" class="input quantity-input" min="1" max="99" value="1"> <button class="buy"> 참여 희망!! </button>
                 </div>
             </div>
             <button class="modal-close is-large" aria-label="close"></button>
@@ -242,6 +302,7 @@
     <div id="comments_list"></div>
 
     <script>
+        
         $(document).ready(function() {
             let params = window.location.href;  // 현재 URL을 가져옴
             let post_id = params.split("/")[4]
@@ -285,6 +346,32 @@
         $('.modal-background').click(function() {
             $('#buy_modal').removeClass('is-active');
         });
+
+
+        $(document).on("click", ".buy", function () {
+                let params = window.location.href;  // 현재 URL을 가져옴
+                let post_id = params.split("/")[4];
+                let purchase_amount = $(".quantity-input").val();
+
+                $.ajax({
+                type: "POST",
+                url: '/buy_product/' + post_id,
+                data: { 
+                    "post_id": post_id, 
+                    "purchase_amount": purchase_amount,
+                },
+                success: function (response) { 
+                    if (response["result"] == "success") {
+                        alert("구매 희먕 요청이 발송됐습니다.");
+                        window.location.reload();
+                    } else {
+                        alert("server error");
+                    }
+                }
+            });
+                
+            })
+
 
         function new_comment() {
             let params = window.location.href;  // 현재 URL을 가져옴
