@@ -72,7 +72,7 @@
     </div>
     <div class="container">
         <div class="button-container">
-            <button onclick="alert('로그인 기능 추가 예정')">로그인</button>
+            <button onclick="window.location.href='login.html'">로그인</button>
             <button onclick="window.location.href='create-product.html'">게시글 생성</button>
         </div>
         <label>카테고리를 선택하세요: </label>
@@ -114,7 +114,7 @@
             tbody.innerHTML = "";
             products.forEach(product => {
                 let row = `<tr data-category="${product.category}">
-                    <td><a href="product-detail.html?id=${product.id}" style="text-decoration: none; color: black;">${product.title}</a></td>
+                    <td><a href="product-detail/${product.id}" style="text-decoration: none; color: black;">${product.title}</a></td>
                             <td>${product.price}</td>
                             <td>${product.deadline}</td>
                             <td>${product.category}</td>
