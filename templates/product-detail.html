@@ -22,29 +22,52 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            justify-content: center;  /* 가로 가운데 정렬 */
+            align-items: center
         }
 
         .info {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px;
-        }
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1000px;
+}
 
-        .info ol {
-            list-style-type: none;
-            padding: 0;
-        }
+.info div:first-child {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
 
-        .info ul {
-            margin-bottom: 10px;
-        }
+.info ol {
+    list-style: none;
+    padding: 0;
+}
 
-        .info span {
-            font-size: 16px;
-            font-weight: bold;
-        }
+.info ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 1rem;
+}
+
+.info ul span:first-child {
+    font-weight: bold;
+    color: #363636;
+}
+
+.input-with-placeholder::placeholder {
+        opacity: 1;
+    }
+
+.info ul span:last-child {
+    font-weight: bold;
+}
 
         .button {
             margin: 10px 0;
@@ -59,6 +82,9 @@
 
         .block {
             margin-top: 20px;
+            max-width: 1000px;
+            
+            
         }
 
         .comment_text {
@@ -119,6 +145,7 @@
         border-left: 4px solid #3498db;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
+        
     }
 
     .reply_text {
@@ -246,6 +273,12 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.centered-comment-container {
+    display: flex;
+    justify-content: center;  /* 가로 가운데 정렬 */
+    align-items: center;
+
+}
 .buy:hover {
     background-color: #e02d56;
     transform: scale(1.05);
@@ -259,6 +292,25 @@
 .box{
     text-align: center;
 }
+
+/* textarea 스타일 */
+textarea {
+   
+    font-size: 14px; /* 폰트 크기 */
+    border: 1px solid #ccc; /* 테두리 색 */
+    border-radius: 6px; /* 모서리 둥글게 */
+    resize: vertical; /* 수직으로 크기 조절 */
+    box-sizing: border-box; /* 패딩 포함 크기 조절 */
+    background-color: #f9f9f9; /* 배경색 */
+    color: #333; /* 텍스트 색 */
+    transition: border-color 0.3s ease, background-color 0.3s ease; /* 애니메이션 효과 */
+}
+
+textarea:focus {
+    border-color: #5cb85c; /* 포커스 시 테두리 색 */
+    background-color: #fff; /* 포커스 시 배경색 */
+    outline: none; /* 포커스 테두리 제거 */
+}
     </style>
 </head>
 <body>
@@ -268,10 +320,11 @@
             <ol>     
                 <ul><span class="name">상품명: </span><span id="name">상품명</span></ul>
                 <ul><span>링크: </span><span id="link"></span></ul>
-                <ul><span>가격: </span><span id="price"></span></ul>
                 <ul><span>마감일: </span><span id="deadline"></span></ul>
-                <ul><span>배송 방법: </span><span id="shipping"></span></ul>
-                <ul><span>수량: </span><span id="quantity"></span> / <span id="condition"></span></ul>
+                <ul><span>가격: </span><span id="price"></span></ul>
+                <ul><span>배송비: </span><span id="shipping"></span></ul>
+                <ul><span>무료 배송 금액:</span> <span id="condition"></span></ul>
+                <ul><span>현재 모집된 수량: </span><span id="quantity"></span></ul>
                 <ul><span>카테고리: </span><span id="category"></span></ul>
             </ol>
         </div>
@@ -294,7 +347,7 @@
         </div>
     </div>
 
-    <div class="block">
+    <div class="centered-comment-container">
         <textarea id="write_comment" class="reply_textarea" placeholder="댓글을 작성해주세요"></textarea>
         <button type="submit" onclick="new_comment()" class="button is-success">댓글 전송</button>
     </div>
@@ -346,7 +399,7 @@
         $('.modal-background').click(function() {
             $('#buy_modal').removeClass('is-active');
         });
-
+        
 
         $(document).on("click", ".buy", function () {
                 let params = window.location.href;  // 현재 URL을 가져옴
@@ -394,6 +447,112 @@
                 }
             });
         }
+
+            
+                    // 수정된 HTML 생성
+                    $(document).on("click", "#edit", function () {
+    let $need_edit_post = $(this).closest(".info");
+
+    if ($need_edit_post.length === 0) {
+        console.error("편집할 게시글을 찾을 수 없습니다.");
+        return;
+    }
+
+    let update_board = $('#board').text();
+    let update_name = $('#name').text();
+    let update_link = $('#link').text();
+    let update_price = $('#price').text();
+    let update_deadline = $('#deadline').text();
+    let update_shipping = $('#shipping').text();
+    let update_condition = $('#condition').text();
+    let update_category = $('#category').text();
+    let update_quantity = $('#quantity').text();
+
+    // 수정된 HTML 생성 (input으로 변경)
+    let edit_post = `
+    <div class="info">
+        <div>
+            <span><input class="board" value="${update_board}" oninput="this.dataset.modified = 'true'" data-original="${update_board}" /></span>
+        </div>
+        <div>
+            <ol>
+                <ul><span>상품명: </span><input class="name" value="${update_name}" oninput="this.dataset.modified = 'true'" data-original="${update_name}" /></ul>
+                <ul><span>링크: </span><input class="link" value="${update_link}" oninput="this.dataset.modified = 'true'" data-original="${update_link}" /></ul>
+                <ul><span>가격: </span><input class="price" value="${update_price}" oninput="this.dataset.modified = 'true'" data-original="${update_price}" /></ul>
+                <ul><span>마감일: </span><input class="deadline" value="${update_deadline}" oninput="this.dataset.modified = 'true'" data-original="${update_deadline}" /></ul>
+                <ul><span>배송비: </span><input class="shipping" value="${update_shipping}" oninput="this.dataset.modified = 'true'" data-original="${update_shipping}" /></ul>
+                <ul><span>배송비 무료 조건:</span><input class="condition" value="${update_condition}" oninput="this.dataset.modified = 'true'" data-original="${update_condition}" /></ul>
+                <ul><span>카테고리: </span><input class="category" value="${update_category}" oninput="this.dataset.modified = 'true'" data-original="${update_category}" /></ul>
+            </ol>
+        </div>
+        <button id="edited" class="button is-info">수정 완료</button>
+    </div>
+    `;
+
+    $need_edit_post.replaceWith(edit_post); 
+});
+
+$(document).on('click', '#edited', function() {
+    let $edited_post = $(this).closest(".info");
+
+    // $edited_post가 잘 선택되었는지 확인
+    if ($edited_post.length === 0) {
+        console.error("수정된 게시글을 찾을 수 없습니다.");
+        return;
+    }
+
+    let params = window.location.href;  // 현재 URL을 가져옴
+    let post_id = params.split("/")[4];
+
+    // .val()을 사용하여 각 input에서 값을 가져옴
+    let update_board = $edited_post.find(".board").val().trim();
+    let update_name = $edited_post.find(".name").val().trim();
+    let update_link = $edited_post.find(".link").val().trim();
+    let update_price = $edited_post.find(".price").val().trim();
+    let update_deadline = $edited_post.find(".deadline").val().trim();
+    let update_shipping = $edited_post.find(".shipping").val().trim();
+    let update_condition = $edited_post.find('.condition').val().trim();
+    let update_category = $edited_post.find('.category').val().trim();
+   
+
+    $.ajax({
+        type: "POST",
+        url: "/update_post",
+        data: {
+            "post_id": post_id, 
+            "update_boards": update_board,
+            "update_name": update_name,
+            "update_link": update_link,
+            "update_price": update_price,
+            "update_deadline": update_deadline,
+            "update_shipping": update_shipping,
+            "update_condition": update_condition,
+            "update_category": update_category,
+        },
+        success: function() {
+            alert("게시글이 수정되었습니다.");
+            window.location.reload();
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX 요청 실패:", error);
+            alert("서버 오류가 발생했습니다.");
+        }
+    });
+});
+
+document.addEventListener("click", function(event) {
+    if (event.target.id === "edited") {
+        let inputs = document.querySelectorAll(".info input");
+        let updatedData = {};
+        inputs.forEach(input => {
+            updatedData[input.className] = input.dataset.modified ? input.value : input.dataset.original;
+        });
+        console.log("최종 저장 데이터:", updatedData);
+        // 이 데이터를 서버로 전송하는 로직 추가 가능
+    }
+});
+
+
         $(document).on("click", ".comment_edit", function () {
                 let $need_edit_comment = $(this).closest(".comment"); 
                 let edit_id = $need_edit_comment.attr("id");
