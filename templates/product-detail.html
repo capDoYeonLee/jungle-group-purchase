@@ -367,7 +367,10 @@ textarea:focus {
                     if(response.result === "success") {
                         $('#board').text(response.product.board);
                         $('#name').text(response.product.name);
-                        $('#link').text(response.product.link);
+                        let link = response.product.link;
+                        if (link) {
+                            $('#link').html(`<a href="${link}" target="_blank">${link}</a>`);
+                        }
                         $('#price').text(response.product.price);
                         $('#deadline').text(response.product.deadline);
                         $('#shipping').text(response.product.shipping);
