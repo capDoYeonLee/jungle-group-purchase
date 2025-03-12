@@ -68,7 +68,19 @@ def createProduct():
 
 #def scheduleComingDeadlineProducts():
 
+#21:41 추가됨 모달창 라우트
+@app.route('/buy_product/<id>', methods=['POST'])
+def buy_porduct(id):
+    post_id = ObjectId(request.form['post_id'])
+    amount = int(db.boards.find_one({'_id' : post_id})['quantity'])
+    buy_amount = int(request.form['purchase_amount'])
+    update_amount = amount + buy_amount
 
+    result = db.boards.update_one({'_id' : post_id},{"$set" : {"quantity" : update_amount}})
+    if result.modified_count > 0:
+        return jsonify({"result": "success", "message": "구매에 참여했습니다!!!"})
+    else:
+        return jsonify({"result": "fail", "message": "오류 발생으로 재시도 바랍니다."})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5001, debug=True)
